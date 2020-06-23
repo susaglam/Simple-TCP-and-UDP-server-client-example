@@ -11,41 +11,51 @@ namespace TCP_Server_GUI
         public Form1()
         {
             InitializeComponent();
-            consoleBox.Text = "Server nije pokrenut.\n";
+            consoleBox.Text = "Server is not running.\n";
         }
 
-        private async void button1_Click(object sender, EventArgs e)
+
+        private async void start1_Click(object sender, EventArgs e)
         {
-            int port = Convert.ToInt32(txtPort.Text);
-            if (port < 2500 || port > 3500)
+            if (btnStart.Text == "START")
             {
-                consoleBox.Text += "Server nije pokrenut. Broj porta treba biti u opsegu 2500 - 3500.";
-                return;
-            }
-            server = Server.getInstance(port);
-            consoleBox.Text = "Server je pokrenut. Ceka se konekcija klijenta.\n";
-
-            await Task.Run(() =>
-            {
-                if (server != null)
+                int port = Convert.ToInt32(txtPort.Text);
+                if (port < 7001 || port > 7020)
                 {
-                    server.acceptClient();
+                    consoleBox.Text += "Please select port 7001 to 7020.";
+                    return;
                 }
-            });
-
-            consoleBox.Text = "Klijent " + server.getClientEndPoint().Address + " je povezan na portu " + server.getClientEndPoint().Port;
-
-            while (true)
-            {
-                string temp = "";
+                server = Server.getInstance(port);
+                consoleBox.Text = "The server is running. Waiting for client connection.\n";
+                btnStart.Text = "STOP";
                 await Task.Run(() =>
                 {
-                    temp = server.receiveMessage();
+                    if (server != null)
+                    {
+                        server.acceptClient();
+                    }
                 });
-                consoleBox.Text += "\n" + temp;
 
+                consoleBox.Text = "Client " + server.getClientEndPoint().Address + " is connected to the port " + server.getClientEndPoint().Port;
+
+                while (true)
+                {
+                    string temp = "";
+                    await Task.Run(() =>
+                    {
+                        temp = server.receiveMessage();
+                    });
+                    consoleBox.Text += "\n" + temp;
+
+                }
+            }
+            else
+            {
+                btnStart.Text = "START";
             }
 
+
         }
+
     }
 }
