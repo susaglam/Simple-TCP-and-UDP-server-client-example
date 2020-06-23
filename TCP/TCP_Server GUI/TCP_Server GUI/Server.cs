@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Net;
 using System.Net.Sockets;
+using System.Text;
 
 namespace TCP_Server_GUI
 {
@@ -50,7 +47,6 @@ namespace TCP_Server_GUI
                 received = client.Receive(data);
                 client.Send(data);
                 return Encoding.ASCII.GetString(data, 0, data.Length);
-
             }
             catch (Exception)
             {
@@ -66,6 +62,5 @@ namespace TCP_Server_GUI
         }
 
         public IPEndPoint getClientEndPoint() { return this.clientEndPoint; }
-
     }
 }
